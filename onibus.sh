@@ -9,8 +9,8 @@
 #
 
 #config
-intervalo_html=60
-intervalo_script=55
+intervalo_html=120
+intervalo_script=100 #deve ser menor que o anterior
 
 #variaveis
 base="$(dirname $0)"
