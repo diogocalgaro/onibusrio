@@ -8,7 +8,9 @@ Script em Bash que utiliza os dados de GPS da frota de ônibus municipais do Rio
 Pré-requisitos:
 
 Bash 4.x
+
 Sqlite 3.x
+
 Navegador Web
 
 =====
