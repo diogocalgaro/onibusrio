@@ -9,11 +9,13 @@
 #
 
 #config
-intervalo_html=120
+intervalo_html=120 #em segundos
 intervalo_script=100 #deve ser menor que o anterior
+naveg_opcoes="google-chrome firefox konqueror opera" #preferencia para uso dos navegadores (separado por espaço)
 
 #variaveis
-base="$(dirname $0)"
+versao="0.1"
+base="$(pwd)"
 arq="$(mktemp)"
 arq2="$(mktemp)"
 html0="$(mktemp)"
@@ -21,7 +23,6 @@ html="${base}/onibus.html"
 nomes="${base}/linhas_onibus.txt"
 sql="$(mktemp)"
 url="http://dadosabertos.rio.rj.gov.br/apiTransporte/apresentacao/csv/onibus.cfm"
-#url=""
 db="${base}/dados.db"
 
 #funcoes
@@ -37,15 +38,22 @@ function sair {
 
 trap sair SIGINT SIGTERM SIGQUIT
 
+#inicio
+echo "Script de acompanhamento de ônibus (versão ${versao})"
+echo
+
 #verificando se a linha foi passada como 1o. parametro
 if [ -n "$1" ]
 then
 	cod="$1"
 	txt="$(grep -m1 "^${cod}" $nomes)"
 	txt="${txt#*=}"
+	tput setf 3
 	echo "Linha: ${txt}"
+	tput sgr0
+	echo
 else
-       	echo -n "[Início] Obtendo os dados de GPS... "
+       	echo -n "Obtendo as linhas disponíveis... "
         curl --compressed -s -o "$arq" "$url" 2>/dev/null || \
        	        aria2c -q -o "$arq" "$url" 2>/dev/null || \
                	        wget -q -O "$arq" --no-use-server-timestamps "$url" 2>/dev/null || \
@@ -97,7 +105,7 @@ else
 fi
 
 #definindo o navegador
-naveg="$(which google-chrome firefox konqueror opera xdg-open 2>/dev/null | head -n1)"
+naveg="$(which ${naveg_opcoes} xdg-open 2>/dev/null | head -n1)"
 
 #laco principal
 prim='s'
@@ -244,7 +252,7 @@ EOF
 	if [ "${prim:-s}" == "s" ]
 	then
 		echo -n "Abrindo navegador... "
-		$naveg ${html} >/dev/null 2>&1
+		$naveg "file://${html}?${cod}" >/dev/null 2>&1 &
 		echo "[OK]"
 		prim="n"
 	fi
