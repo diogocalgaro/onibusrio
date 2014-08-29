@@ -55,9 +55,9 @@ then
 else
        	echo -n "Obtendo as linhas disponíveis... "
         curl --compressed -s -o "$arq" "$url" 2>/dev/null || \
-       	        aria2c -q -o "$arq" "$url" 2>/dev/null || \
-               	        wget -q -O "$arq" --no-use-server-timestamps "$url" 2>/dev/null || \
-                       	        (echo -e "\nNenhum programa de download disponível..." ; exit 1)
+		aria2c -q -o "$arq" "$url" 2>/dev/null || \
+			wget -q -O "$arq" --no-use-server-timestamps "$url" 2>/dev/null || \
+				(echo -e "\nNenhum programa de download disponível..." ; exit 1)
 	echo "[OK]"
 
 	#selecionando a linha de onibus
